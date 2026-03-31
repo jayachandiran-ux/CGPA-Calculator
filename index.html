@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGPA Calculator</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+
+.container{
+  background:#fff;
+  padding:30px;
+  border-radius:15px;
+  width:400px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+.subject-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+select,input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  margin:5px;
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#1e3c72;
+  color:#fff;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#16325c;
+}
+
+#result{
+  margin-top:20px;
+  font-size:20px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>CGPA Calculator</h1>
+
+  <div id="subjectList">
+    <div class="subject-row">
+      <select class="grade">
+        <option value="">Grade</option>
+        <option value="10">O</option>
+        <option value="9">A+</option>
+        <option value="8">A</option>
+        <option value="7">B+</option>
+        <option value="6">B</option>
+        <option value="5">C+</option>
+        <option value="4">C</option>
+      </select>
+      <input type="number" class="credit" placeholder="Credit">
+    </div>
+  </div>
+
+  <button onclick="addSubject()">Add Subject</button>
+  <button onclick="calculateCGPA()">Calculate</button>
+  <button onclick="resetFields()">Reset</button>
+
+  <div id="result">CGPA: 0.00</div>
+</div>
+
+<script>
+function addSubject(){
+  const div = document.createElement("div");
+  div.className="subject-row";
+
+  div.innerHTML=`
+    <select class="grade">
+      <option value="">Grade</option>
+      <option value="10">O</option>
+      <option value="9">A+</option>
+      <option value="8">A</option>
+      <option value="7">B+</option>
+      <option value="6">B</option>
+      <option value="5">C+</option>
+      <option value="4">C</option>
+    </select>
+    <input type="number" class="credit" placeholder="Credit">
+  `;
+
+  document.getElementById("subjectList").appendChild(div);
+}
+
+function calculateCGPA(){
+  const grades=document.querySelectorAll(".grade");
+  const credits=document.querySelectorAll(".credit");
+
+  let total=0;
+  let totalCredits=0;
+
+  for(let i=0;i<grades.length;i++){
+    let g=parseFloat(grades[i].value);
+    let c=parseFloat(credits[i].value);
+
+    if(!isNaN(g) && !isNaN(c)){
+      total+=g*c;
+      totalCredits+=c;
+    }
+  }
+
+  if(totalCredits==0){
+    document.getElementById("result").innerText="Enter valid data";
+    return;
+  }
+
+  let cgpa=total/totalCredits;
+  document.getElementById("result").innerText="CGPA: "+cgpa.toFixed(2);
+}
+
+function resetFields(){
+  document.getElementById("subjectList").innerHTML=`
+    <div class="subject-row">
+      <select class="grade">
+        <option value="">Grade</option>
+        <option value="10">O</option>
+        <option value="9">A+</option>
+        <option value="8">A</option>
+        <option value="7">B+</option>
+        <option value="6">B</option>
+        <option value="5">C+</option>
+        <option value="4">C</option>
+      </select>
+      <input type="number" class="credit" placeholder="Credit">
+    </div>
+  `;
+  document.getElementById("result").innerText="CGPA: 0.00";
+}
+</script>
+
+</body>
+</html>
