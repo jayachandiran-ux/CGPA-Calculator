@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CGPA Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <!--
+    Prevent flash of wrong theme:
+    Read localStorage before the page renders and apply 'dark' class immediately.
+  -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark-pre');
+    }
+  </script>
+  <style>
+    /* Applied before body renders to avoid flash */
+    html.dark-pre body { background: linear-gradient(135deg,#0a0a0f,#0d1117,#0f1923); }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Header row: title + theme toggle -->
+  <div class="header">
+    <h1>🎓 CGPA Calculator</h1>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      🌙 Dark Mode
+    </button>
+  </div>
+
+  <p class="subtitle">Add your subjects, select grades, and calculate your CGPA</p>
+
+  <!-- Subject rows injected by script.js -->
+  <div id="subjects"></div>
+
+  <!-- Action buttons -->
+  <div class="btn-group">
+    <button class="btn btn-add"   onclick="addSubject()">+ Add Subject</button>
+    <button class="btn btn-calc"  onclick="calculate()">Calculate</button>
+    <button class="btn btn-reset" onclick="resetAll()">Reset</button>
+  </div>
+
+  <!-- Result (shown after calculation) -->
+  <div class="result" id="result"></div>
+
+  <!-- Grading reference table -->
+  <div class="table-section">
+    <h2>📋 Grading System</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Grade</th>
+          <th>Grade Point</th>
+          <th>Marks Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>O</td><td>10</td><td>91 – 100</td></tr>
+        <tr><td>A+</td><td>9</td><td>81 – 90</td></tr>
+        <tr><td>A</td><td>8</td><td>71 – 80</td></tr>
+        <tr><td>B+</td><td>7</td><td>61 – 70</td></tr>
+        <tr><td>B</td><td>6</td><td>56 – 60</td></tr>
+        <tr><td>C</td><td>5</td><td>50 – 55</td></tr>
+        <tr><td>F</td><td>0</td><td>Below 50</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── CSS Variables (Light theme defaults) ── */
+:root {
+  --bg:           linear-gradient(135deg, #e0eafc, #cfdef3);
+  --card-bg:      #ffffff;
+  --card-shadow:  0 20px 60px rgba(0, 0, 0, 0.15);
+  --title-color:  #0f3460;
+  --subtitle:     #777;
+  --row-bg:       #f4f6fb;
+  --border:       #d0d7e8;
+  --border-focus: #0f3460;
+  --text:         #333;
+  --label:        #555;
+  --meta:         #6b7280;
+  --table-head:   #0f3460;
+  --table-even:   #f4f6fb;
+  --table-hover:  #e8edf8;
+  --btn-reset-bg: #e2e8f0;
+  --btn-reset-fg: #333;
+  --btn-reset-hv: #cbd5e1;
+  --result-ok-bg: #ecfdf5;
+  --result-ok-bd: #6ee7b7;
+  --result-ok-fg: #065f46;
+  --result-er-bg: #fff1f2;
+  --result-er-bd: #fda4af;
+  --result-er-fg: #9f1239;
+  --toggle-bg:    #0f3460;
+  --toggle-fg:    #fff;
+  --input-bg:     #fff;
+}
+
+/* ── Dark theme overrides ── */
+body.dark {
+  --bg:           linear-gradient(135deg, #0a0a0f, #0d1117, #0f1923);
+  --card-bg:      rgba(255, 255, 255, 0.05);
+  --card-shadow:  0 24px 64px rgba(0, 0, 0, 0.7);
+  --title-color:  #7dd3fc;
+  --subtitle:     #94a3b8;
+  --row-bg:       rgba(255, 255, 255, 0.06);
+  --border:       rgba(255, 255, 255, 0.12);
+  --border-focus: #7dd3fc;
+  --text:         #e2e8f0;
+  --label:        #94a3b8;
+  --meta:         #64748b;
+  --table-head:   rgba(125, 211, 252, 0.15);
+  --table-even:   rgba(255, 255, 255, 0.03);
+  --table-hover:  rgba(125, 211, 252, 0.08);
+  --btn-reset-bg: rgba(255, 255, 255, 0.08);
+  --btn-reset-fg: #e2e8f0;
+  --btn-reset-hv: rgba(255, 255, 255, 0.14);
+  --result-ok-bg: rgba(6, 95, 70, 0.2);
+  --result-ok-bd: #059669;
+  --result-ok-fg: #6ee7b7;
+  --result-er-bg: rgba(159, 18, 57, 0.2);
+  --result-er-bd: #e11d48;
+  --result-er-fg: #fda4af;
+  --toggle-bg:    rgba(125, 211, 252, 0.15);
+  --toggle-fg:    #7dd3fc;
+  --input-bg:     rgba(255, 255, 255, 0.06);
+}
+
+/* ── Base ── */
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 30px 16px;
+  transition: background 0.4s ease;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow);
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background 0.4s, box-shadow 0.4s, border 0.4s;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-size: 1.9rem;
+  color: var(--title-color);
+  letter-spacing: 1px;
+  transition: color 0.3s;
+}
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  background: var(--toggle-bg);
+  color: var(--toggle-fg);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s, color 0.3s, border 0.3s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover { transform: scale(1.05); }
+
+.subtitle {
+  text-align: center;
+  color: var(--subtitle);
+  font-size: 0.88rem;
+  margin-bottom: 26px;
+  transition: color 0.3s;
+}
+
+/* ── Subject rows ── */
+#subjects { display: flex; flex-direction: column; gap: 12px; }
+
+.subject-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--row-bg);
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  transition: background 0.3s, border 0.3s;
+}
+
+.subject-row label {
+  font-size: 0.82rem;
+  color: var(--label);
+  white-space: nowrap;
+  min-width: 72px;
+  transition: color 0.3s;
+}
+
+.subject-row select,
+.subject-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border 0.2s, background 0.3s, color 0.3s;
+}
+
+.subject-row select:focus,
+.subject-row input:focus { border-color: var(--border-focus); }
+
+/* Fix dark dropdown option colors */
+.subject-row select option { background: #1e293b; color: #e2e8f0; }
+
+.remove-btn {
+  background: #ff4d6d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.remove-btn:hover { background: #c9184a; transform: scale(1.1); }
+
+/* ── Buttons ── */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active { transform: translateY(0); }
+
+.btn-add  { background: #0f3460; color: #fff; }
+.btn-add:hover { background: #16213e; }
+
+.btn-calc { background: #e94560; color: #fff; }
+.btn-calc:hover { background: #c9184a; }
+
+.btn-reset {
+  background: var(--btn-reset-bg);
+  color: var(--btn-reset-fg);
+  transition: background 0.2s, color 0.3s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-reset:hover { background: var(--btn-reset-hv); }
+
+/* ── Result ── */
+.result {
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  display: none;
+  transition: all 0.3s;
+}
+
+.result.success {
+  background: var(--result-ok-bg);
+  border: 1.5px solid var(--result-ok-bd);
+  color: var(--result-ok-fg);
+  display: block;
+}
+
+.result.error {
+  background: var(--result-er-bg);
+  border: 1.5px solid var(--result-er-bd);
+  color: var(--result-er-fg);
+  display: block;
+}
+
+.result .big {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.result .meta {
+  font-size: 0.82rem;
+  color: var(--meta);
+  margin-top: 6px;
+}
+
+/* ── Grading table ── */
+.table-section { margin-top: 36px; }
+
+.table-section h2 {
+  font-size: 1.05rem;
+  color: var(--title-color);
+  margin-bottom: 12px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+thead tr { background: var(--table-head); }
+
+thead th {
+  padding: 10px 12px;
+  text-align: center;
+  color: var(--title-color);
+  transition: color 0.3s;
+}
+
+/* Light mode: white text on dark header */
+body:not(.dark) thead th { color: #fff; }
+
+tbody tr:nth-child(even) { background: var(--table-even); }
+tbody tr:hover { background: var(--table-hover); }
+tbody td {
+  padding: 9px 12px;
+  text-align: center;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .card { padding: 24px 14px; }
+  h1 { font-size: 1.4rem; }
+  .subject-row { flex-wrap: wrap; }
+  .header { flex-direction: column; gap: 12px; align-items: flex-start; }
+}

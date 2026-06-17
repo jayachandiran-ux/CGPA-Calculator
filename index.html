@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CGPA Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #0f3460;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    /* Subject rows */
+    #subjects { display: flex; flex-direction: column; gap: 12px; }
+
+    .subject-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f4f6fb;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .subject-row label {
+      font-size: 0.82rem;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .subject-row select,
+    .subject-row input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1.5px solid #d0d7e8;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fff;
+      transition: border 0.2s;
+    }
+
+    .subject-row select:focus,
+    .subject-row input:focus { border-color: #0f3460; }
+
+    .remove-btn {
+      background: #ff4d6d;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .remove-btn:hover { background: #c9184a; transform: scale(1.1); }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-add    { background: #0f3460; color: #fff; }
+    .btn-add:hover { background: #16213e; }
+
+    .btn-calc   { background: #e94560; color: #fff; }
+    .btn-calc:hover { background: #c9184a; }
+
+    .btn-reset  { background: #e2e8f0; color: #333; }
+    .btn-reset:hover { background: #cbd5e1; }
+
+    /* Result */
+    .result {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1rem;
+      display: none;
+    }
+
+    .result.success {
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      color: #065f46;
+      display: block;
+    }
+
+    .result.error {
+      background: #fff1f2;
+      border: 1.5px solid #fda4af;
+      color: #9f1239;
+      display: block;
+    }
+
+    .result .big { font-size: 1.6rem; font-weight: 700; margin: 4px 0; }
+
+    /* Grade table */
+    .table-section { margin-top: 36px; }
+
+    .table-section h2 {
+      font-size: 1.1rem;
+      color: #0f3460;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead tr { background: #0f3460; color: #fff; }
+    thead th { padding: 10px 12px; text-align: center; }
+
+    tbody tr:nth-child(even) { background: #f4f6fb; }
+    tbody tr:hover { background: #e8edf8; }
+    tbody td { padding: 9px 12px; text-align: center; color: #333; }
+
+    @media (max-width: 480px) {
+      .card { padding: 24px 16px; }
+      h1 { font-size: 1.5rem; }
+      .subject-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🎓 CGPA Calculator</h1>
+  <p class="subtitle">Add your subjects, select grades, and calculate your CGPA</p>
+
+  <div id="subjects"></div>
+
+  <div class="btn-group">
+    <button class="btn btn-add"   onclick="addSubject()">+ Add Subject</button>
+    <button class="btn btn-calc"  onclick="calculate()">Calculate</button>
+    <button class="btn btn-reset" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <!-- Grading Table -->
+  <div class="table-section">
+    <h2>📋 Grading System</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Grade</th>
+          <th>Grade Point</th>
+          <th>Marks Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>O</td><td>10</td><td>91 – 100</td></tr>
+        <tr><td>A+</td><td>9</td><td>81 – 90</td></tr>
+        <tr><td>A</td><td>8</td><td>71 – 80</td></tr>
+        <tr><td>B+</td><td>7</td><td>61 – 70</td></tr>
+        <tr><td>B</td><td>6</td><td>56 – 60</td></tr>
+        <tr><td>C</td><td>5</td><td>50 – 55</td></tr>
+        <tr><td>F</td><td>0</td><td>Below 50</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const gradePoints = { O: 10, 'A+': 9, A: 8, 'B+': 7, B: 6, C: 5, F: 0 };
+  let subjectCount = 0;
+
+  function addSubject() {
+    subjectCount++;
+    const container = document.getElementById('subjects');
+    const row = document.createElement('div');
+    row.className = 'subject-row';
+    row.id = 'row-' + subjectCount;
+
+    row.innerHTML = `
+      <label>Subject ${subjectCount}</label>
+      <select>
+        <option value="">Grade</option>
+        ${Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('')}
+      </select>
+      <input type="number" placeholder="Credits" min="1" max="10" />
+      <button class="remove-btn" onclick="removeSubject('row-${subjectCount}')" title="Remove">✕</button>
+    `;
+
+    container.appendChild(row);
+  }
+
+  function removeSubject(id) {
+    const row = document.getElementById(id);
+    if (row) row.remove();
+  }
+
+  function calculate() {
+    const rows = document.querySelectorAll('.subject-row');
+    const resultEl = document.getElementById('result');
+
+    if (rows.length === 0) {
+      showError('Please add at least one subject.');
+      return;
+    }
+
+    let totalPoints = 0, totalCredits = 0, valid = 0;
+
+    rows.forEach(row => {
+      const grade  = row.querySelector('select').value;
+      const credit = parseFloat(row.querySelector('input').value);
+
+      if (grade && !isNaN(credit) && credit > 0) {
+        totalPoints  += gradePoints[grade] * credit;
+        totalCredits += credit;
+        valid++;
+      }
+    });
+
+    if (valid === 0 || totalCredits === 0) {
+      showError('No valid data found. Please fill in grade and credit for at least one subject.');
+      return;
+    }
+
+    const cgpa       = totalPoints / totalCredits;
+    const percentage = cgpa * 9.5;
+
+    resultEl.className = 'result success';
+    resultEl.innerHTML = `
+      <div>Your CGPA</div>
+      <div class="big">${cgpa.toFixed(2)}</div>
+      <div style="margin-top:8px">Percentage: <strong>${percentage.toFixed(2)}%</strong></div>
+      <div style="margin-top:4px;font-size:0.82rem;color:#6b7280">Based on ${valid} subject(s) · ${totalCredits} total credits</div>
+    `;
+  }
+
+  function showError(msg) {
+    const resultEl = document.getElementById('result');
+    resultEl.className = 'result error';
+    resultEl.innerHTML = `⚠️ ${msg}`;
+  }
+
+  function resetAll() {
+    document.getElementById('subjects').innerHTML = '';
+    const resultEl = document.getElementById('result');
+    resultEl.className = 'result';
+    resultEl.innerHTML = '';
+    subjectCount = 0;
+  }
+
+  // Start with 3 subjects by default
+  addSubject();
+  addSubject();
+  addSubject();
+</script>
+
+</body>
+</html>
